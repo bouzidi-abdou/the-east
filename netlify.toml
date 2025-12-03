@@ -1,43 +1,29 @@
-# -------------------------------
-# Netlify configuration file
-# -------------------------------
-
 [build]
-  # مجلد النشر (حيث يوجد index.html و login.html)
-  publish = "public"
-  # مجلد الدوال
+  # فرض تشغيل npm install قبل البناء لضمان تثبيت node-fetch
+  # لا تحتاج إلى هذا الأمر إذا كان لديك ملف package.json، لكنه يزيد من التأكيد
+  command = "npm install" 
+  # المسار الذي توجد فيه ملفاتك النهائية (index.html, login.html)
+  # بما أن ملفاتك في الجذر (root)، يجب أن يكون المسار هكذا
+  publish = "." 
   functions = "netlify/functions"
 
-# -------------------------------
-# Redirects
-# -------------------------------
 [[redirects]]
-  # تحويل الصفحة الرئيسية مباشرة إلى login.html
+  from = "/index"
+  to = "/login.html"
+  status = 302
+  force = true
+  conditions = {Cookie = ["!discord_access_token"]}
+
+[[redirects]]
   from = "/"
   to = "/login.html"
   status = 302
   force = true
+  conditions = {Cookie = ["!discord_access_token"]}
 
-[[redirects]]
-  # تحويل أي طلب غير موجود إلى login.html (حماية 404)
-  from = "/*"
-  to = "/login.html"
-  status = 302
-  force = false
-
-[[redirects]]
-  # توجيه OAuth callback إلى الدالة
-  from = "/.netlify/functions/discord-callback"
-  to = "/.netlify/functions/discord-callback"
-  status = 200
-  force = true
-
-# -------------------------------
-# Headers (اختياري لتقوية الأمان)
-# -------------------------------
-[[headers]]
-  for = "/*"
-  [headers.values]
-    X-Frame-Options = "DENY"
-    X-Content-Type-Options = "nosniff"
-    Referrer-Policy = "no-referrer-when-downgrade"
+# هذا هو التحويل الخاطئ الذي تم الإشارة إليه، يجب حذفه إذا كان موجوداً
+# [[redirects]]
+#   from = "/.netlify/functions/discord-callback"
+#   to = "/.netlify/functions/discord-callback"
+#   status = 200
+#   force = true
