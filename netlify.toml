@@ -1,12 +1,8 @@
 [build]
-  # فرض تشغيل npm install قبل البناء لضمان تثبيت node-fetch
-  # لا تحتاج إلى هذا الأمر إذا كان لديك ملف package.json، لكنه يزيد من التأكيد
   command = "npm install" 
-  # المسار الذي توجد فيه ملفاتك النهائية (index.html, login.html)
-  # بما أن ملفاتك في الجذر (root)، يجب أن يكون المسار هكذا
   publish = "." 
   functions = "netlify/functions"
-
+# ... بقية التحويلات الخاصة بك
 [[redirects]]
   from = "/index"
   to = "/login.html"
