@@ -1,0 +1,915 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>THE EAST NETWORK — بوابة الدخول الحصرية</title>
+
+  <meta property="og:title" content="THE EAST NETWORK — بوابة الدخول الحصرية" />
+  <meta property="og:description" content="بوابة تسجيل الدخول الموحد الخاصة بـ THE EAST NETWORK — أمان عالي، وصول موثوق، وتجربة عضوية مخصصة." />
+  <meta property="og:image" content="en.png" />
+  <meta property="og:type" content="website" />
+  <meta name="description" content="بوابة تسجيل الدخول الموحد الخاصة بـ THE EAST NETWORK — أمان عالي، وصول موثوق، وتجربة عضوية مخصصة." />
+  <link rel="icon" href="en.png" type="image/png" />
+  <link rel="shortcut icon" href="title.png" type="image/png" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <style>
+    /* ============================
+       متغيرات التصميم (Theme)
+       ============================ */
+    :root{
+      --bg-900: #06070a;
+      --bg-800: #0f1316;
+      --card: #111316;
+      --muted: #9aa3ad;
+      --text: #e8eef6;
+      --accent-1: #5b9ef9;
+      --accent-2: #7b61ff;
+      --glow-color: rgba(91,158,249,0.5); 
+      --glass: rgba(255,255,255,0.04);
+      --glass-2: rgba(255,255,255,0.02);
+      --card-border: rgba(91,158,249,0.08);
+      --success: #2ecc71;
+      --danger: #ff6b6b;
+      --radius-lg: 20px;
+      --radius-md: 12px;
+      --transition-fast: 200ms;
+      --transition-medium: 450ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    /* ============================
+       Reset & Base
+       ============================ */
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: 'Cairo', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: var(--bg-900);
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.6;
+      direction:rtl;
+      text-align:right;
+      overflow-x:hidden;
+    }
+
+    /* ============================
+       Gradient mesh background (تحسين رقم 6)
+       ============================ */
+    /* Animate the main gradient overlay */
+    @keyframes slow-move {
+      0%{transform: translateY(0px) rotate(0deg) scale(1)}
+      50%{transform: translateY(-8px) rotate(0.2deg) scale(1.02)}
+      100%{transform: translateY(0px) rotate(0deg) scale(1)}
+    }
+    body::after{
+      content:"";
+      position:fixed;
+      inset: -20% -20%;
+      z-index:-3;
+      /* تم تغيير الألوان قليلاً لخلق تأثير "الشبكة" المتحرك */
+      background: linear-gradient(120deg, rgba(91,158,249,0.02) 10%, rgba(123,97,255,0.03) 90%);
+      filter: blur(100px); 
+      transform-origin:center;
+      animation: slow-move 30s ease-in-out infinite; /* زيادة مدة الحركة لزيادة السلاسة */
+      pointer-events:none;
+    }
+
+    /* ============================
+       Navbar (Glass + Blur)
+       ============================ */
+    .navbar{
+      position:fixed;
+      top:12px;
+      left:12px;
+      right:12px;
+      height:72px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      padding: 10px 22px;
+      border-radius: 16px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border: 1px solid rgba(255,255,255,0.03);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+      backdrop-filter: blur(10px);
+      z-index:999;
+    }
+    .nav-left, .nav-right{display:flex;align-items:center;gap:14px}
+    .nav-brand{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      text-decoration:none;
+      color:var(--text);
+      font-weight:800;
+      font-size:1.05rem;
+      letter-spacing:0.4px;
+    }
+    .nav-brand img{width:44px;height:44px;object-fit:contain;border-radius:6px;box-shadow: 0 6px 20px rgba(91,158,249,0.06);}
+
+    .nav-links{display:flex;gap:12px;align-items:center}
+    .nav-link{
+      color:var(--muted);
+      text-decoration:none;
+      padding:8px 12px;border-radius:10px;
+      font-size:0.98rem;
+      transition:all var(--transition-fast) ease;
+      cursor:help; /* **تحسين رقم 4: مؤشر المساعدة** */
+    }
+    .nav-link:hover{color:var(--text);background:var(--glass)}
+    .nav-link i{color:var(--accent-1); transition: color var(--transition-fast) ease;}
+    .nav-link:hover i{color:var(--text);}
+
+    .profile-pill{
+      display:inline-flex;gap:10px;align-items:center;
+      padding:8px 12px;border-radius:999px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));
+      border:1px solid rgba(255,255,255,0.03);
+      cursor:pointer;
+      color:var(--muted);
+      font-weight:600;
+      transition:all var(--transition-fast) ease;
+    }
+    .profile-pill:hover{color:var(--text); background:rgba(91,158,249,0.06);}
+    .profile-pill i{color:var(--accent-1); transition: color var(--transition-fast) ease;}
+    .profile-pill:hover i{color:var(--text);}
+
+
+    /* ============================
+       Main container - Hero card
+       ============================ */
+    .container{
+      max-width:1100px;
+      margin:120px auto 60px;
+      padding:28px;
+    }
+
+    .hero{
+      display:flex;
+      gap:28px;
+      align-items:center;
+      background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.015));
+      border-radius: var(--radius-lg);
+      padding:36px;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+      border:1px solid var(--card-border);
+      overflow:hidden;
+      position:relative;
+    }
+
+    /* left column (text) */
+    .hero-col{
+      flex:1 1 60%;
+      min-width:250px;
+    }
+    .brand-title{
+      font-size:2.4rem;
+      margin:0 0 10px;
+      font-weight:800;
+      letter-spacing:0.2px;
+      color:var(--text);
+    }
+    .brand-sub{
+      margin:0 0 18px;
+      color:var(--muted);
+      font-size:1.05rem;
+      line-height:1.7;
+      max-width:760px;
+    }
+
+    /* CTA buttons */
+    .hero-ctas{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-top:12px}
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      gap:12px;
+      padding:14px 22px;
+      border-radius:14px;
+      font-weight:700;
+      text-decoration:none;
+      cursor:pointer;
+      transition: transform var(--transition-medium), box-shadow var(--transition-medium), background var(--transition-fast);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.55);
+      border:none;
+      position:relative;
+      z-index: 10;
+    }
+
+    /* Glow animation */
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(91,158,249,0.4); }
+      50% { box-shadow: 0 0 12px 2px rgba(91,158,249,0.6); }
+    }
+
+    /* Discord-style primary gradient glass */
+    .btn-primary{
+      background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+      color:white;
+      min-width:220px;
+      justify-content:center;
+      box-shadow: 0 8px 40px rgba(91,158,249,0.12), 0 4px 12px rgba(0,0,0,0.6);
+      animation: pulse-glow 4s infinite ease-in-out;
+    }
+    .btn-primary i{
+      font-size:1.25rem;
+      /* **تحسين رقم 3: ظل خفيف للأيقونة** */
+      text-shadow: 0 0 4px rgba(255, 255, 255, 0.6); 
+    }
+
+    .btn-primary:hover{transform: translateY(-4px); box-shadow: 0 18px 60px rgba(91,158,249,0.22), 0 6px 16px rgba(0,0,0,0.7);}
+
+    /* Inner Glass effect on active state */
+    .btn-primary::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: rgba(255, 255, 255, 0.08); 
+        opacity: 0;
+        transition: opacity var(--transition-fast) ease;
+        border-radius: 14px;
+        z-index: -1;
+    }
+    .btn-primary:active::after {
+        opacity: 1;
+    }
+
+    /* **تحسين رقم 5: حالة التحميل للزر** */
+    .btn-primary.is-loading {
+      cursor: wait;
+      pointer-events: none;
+      opacity: 0.8;
+      background: linear-gradient(90deg, var(--accent-1), var(--accent-2)); /* لضمان ثبات اللون */
+      animation: none; /* إيقاف الوميض */
+      transform: none;
+      box-shadow: none;
+    }
+    .btn-primary.is-loading i.fa-discord { display: none; }
+    .btn-primary.is-loading span { margin-right: 10px; }
+    .btn-primary.is-loading .spinner { 
+      display: inline-block;
+      width: 1.25rem;
+      height: 1.25rem;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 0.6s ease-in-out infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+
+    /* Secondary outline */
+    .btn-outline{
+      background:transparent;
+      border:1px solid rgba(255,255,255,0.06);
+      color:var(--accent-1);
+      min-width:160px;
+      font-weight:700;
+    }
+    .btn-outline:hover{background:rgba(91,158,249,0.06); color:var(--text); transform: translateY(-3px)}
+
+    /* small helper text */
+    .helper{
+      margin-top:14px;color:var(--muted);font-size:0.95rem;
+    }
+
+    /* right column (logo & visual) */
+    .hero-visual{
+      width:320px;
+      min-width:220px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      position:relative;
+    }
+    .logo-frame{
+      width:260px;height:260px;border-radius:18px;
+      display:flex;align-items:center;justify-content:center;
+      background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));
+      border:1px solid rgba(255,255,255,0.03);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+      position:relative;
+      overflow:visible;
+      /* تم تحديث الانتقال ليشمل الحركة */
+      transition: transform var(--transition-medium), border var(--transition-fast), animation 3s; 
+      cursor:default;
+    }
+
+    /* **تحسين رقم 2: إضافة الحركة الطفيفة للشعار** */
+    @keyframes slight-float {
+        0% { transform: translateY(0px) rotate(0deg) scale(1.0); }
+        50% { transform: translateY(-3px) rotate(-0.5deg) scale(1.01); }
+        100% { transform: translateY(0px) rotate(0deg) scale(1.0); }
+    }
+    .logo-frame:hover{
+        transform: scale(1.02);
+        border-color: rgba(91,158,249,0.15); 
+        animation: slight-float 3s ease-in-out infinite; 
+    }
+    .logo-frame img{width:160px;height:160px;object-fit:contain;display:block;filter:drop-shadow(0 8px 30px rgba(91,158,249,0.18));}
+
+    /* small glowing rim */
+    .logo-glow{
+      position:absolute;inset:auto 6px 6px 6px;border-radius:14px;
+      pointer-events:none;
+      box-shadow: 0 30px 90px rgba(91,158,249,0.06), inset 0 0 40px rgba(123,97,255,0.02);
+    }
+
+    /* ============================
+       Features / Accordion
+       ============================ */
+    .features{
+      margin-top:24px;
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:18px;
+    }
+
+    .accordion{
+      background:transparent;
+      border-radius:12px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,0.03);
+    }
+    .acc-item{border-bottom:1px solid rgba(255,255,255,0.02)}
+    .acc-head{
+      display:flex;align-items:center;justify-content:space-between;padding:16px 18px;cursor:pointer;
+      gap:10px;background:linear-gradient(180deg, rgba(255,255,255,0.005), rgba(255,255,255,0.002));
+      transition: all var(--transition-fast) ease; 
+    }
+    .acc-head:hover{background:var(--glass-2)}
+    .acc-head[aria-expanded="true"]{background:var(--glass)} 
+    .acc-head h4{margin:0;font-size:1.05rem;color:var(--text);font-weight:700}
+    .acc-head p{margin:0;color:var(--muted);font-size:0.95rem}
+    .acc-body{max-height:0;overflow:hidden;padding:0 18px;transition:max-height .45s cubic-bezier(.2,.9,.2,1), padding .25s;}
+    .acc-body.open{padding:14px 18px 20px; max-height:1200px}
+    .acc-body p{color:var(--muted);margin:0;font-size:0.98rem;line-height:1.75}
+
+    .acc-icon{transition: transform .28s ease, color .28s ease}
+    /* **تحسين رقم 7: تلوين الأيقونة عند الفتح** */
+    .acc-head[aria-expanded="true"] .acc-icon i {
+        color: var(--accent-1);
+        transform: rotate(90deg) !important; /* لضمان التفوق على الحركة الأصلية */
+    }
+
+
+    /* ============================
+       Footer
+       ============================ */
+    footer{
+      max-width:1100px;margin:26px auto 80px;padding:18px;border-radius:14px;background:transparent;color:var(--muted);
+      display:flex;justify-content:space-between;align-items:center;gap:16px;
+      border:1px solid rgba(255,255,255,0.02);
+    }
+    .footer-left{font-size:0.95rem; display:flex; gap:10px; align-items:center;}
+    .footer-links{display:flex;gap:12px;align-items:center}
+    .footer-links a{color:var(--muted);text-decoration:none;font-weight:600;padding:8px;border-radius:8px; cursor:pointer;}
+    .footer-links a:hover{color:var(--text);background:var(--glass-2)}
+
+    /* ============================
+       Modal (النافذة المنبثقة)
+       ============================ */
+    .modal-overlay{
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(8px);
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity var(--transition-fast) ease;
+    }
+    .modal-overlay.open{
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .modal-content{
+        width: 90%;
+        max-width: 500px;
+        background: var(--card);
+        border: 1px solid var(--card-border);
+        border-radius: var(--radius-lg);
+        box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+        transform: scale(0.9);
+        transition: transform var(--transition-fast) ease;
+        padding: 24px;
+    }
+    .modal-overlay.open .modal-content{
+        transform: scale(1);
+    }
+
+    .modal-header{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+        padding-bottom: 16px;
+        margin-bottom: 16px;
+    }
+    #modal-title{
+        margin: 0;
+        font-weight: 800;
+        font-size: 1.4rem;
+        color: var(--accent-1);
+    }
+
+    .modal-close{
+        background: var(--glass-2);
+        color: var(--muted);
+        border: 1px solid rgba(255,255,255,0.05);
+        border-radius: 50%;
+        width: 36px;
+        height: 36px;
+        cursor: pointer;
+        transition: all var(--transition-fast) ease;
+    }
+    .modal-close:hover{
+        color: var(--text);
+        background: var(--glass);
+        transform: rotate(90deg);
+    }
+
+    .modal-body p{
+        color: var(--muted);
+        line-height: 1.8;
+        font-size: 0.98rem;
+        white-space: pre-wrap;
+    }
+
+    .modal-footer{
+        padding-top: 16px;
+        border-top: 1px solid rgba(255,255,255,0.05);
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+    }
+    /* تداخل زر النسخ مع الـ CTA */
+    #modal-cta, #modal-copy {
+        min-width:auto !important;
+        padding:10px 18px !important;
+        margin-top:0 !important;
+        display:none !important;
+    }
+    #modal-copy {
+        background: var(--glass-2) !important;
+        border-color: rgba(255,255,255,0.1) !important;
+        color: var(--muted) !important;
+        font-weight: 600 !important;
+        transition: all var(--transition-fast) ease;
+    }
+    #modal-copy:hover {
+        background: var(--glass) !important;
+        color: var(--text) !important;
+    }
+    #modal-copy.copied {
+        background: var(--success) !important;
+        color: white !important;
+        border-color: var(--success) !important;
+    }
+    
+
+    /* ============================
+       Responsiveness
+       ============================ */
+    @media (max-width:900px){
+      .hero{flex-direction:column;align-items:stretch;padding:22px}
+      .hero-visual{width:100%;order:-1;display:flex;justify-content:center;margin-bottom:12px}
+      .logo-frame{width:220px;height:220px}
+      .brand-title{font-size:1.85rem}
+      .modal-content{padding:18px;}
+    }
+    @media (max-width:520px){
+      .navbar{padding:8px 12px;height:64px;border-radius:12px}
+      .nav-brand span{display:none}
+      .brand-title{font-size:1.5rem}
+      .logo-frame{width:180px;height:180px}
+      .helper{font-size:0.9rem}
+      .btn{padding:12px 16px}
+    }
+
+    /* Accessibility: prefers-reduced-motion */
+    @media (prefers-reduced-motion: reduce){
+      /* **تحديث ليتضمن حركة الشعار** */
+      .btn, body::after, .btn-primary, .logo-frame { animation: none !important; transition: none !important; }
+      .modal-overlay, .modal-content { transition: none !important; }
+    }
+
+    /* Accessibility: Keyboard Focus Styles */
+    /* **تحسين رقم 1: تحسين Focus State** */
+    a:focus-visible, button:focus-visible, [role="button"]:focus-visible, .profile-pill:focus-visible, .acc-head:focus-visible {
+        outline: none; 
+        box-shadow: 0 0 0 3px var(--bg-900), 
+                    0 0 0 5px var(--accent-1); 
+        outline-offset: 3px;
+        border-radius: var(--radius-md); 
+    }
+    
+  </style>
+</head>
+<body>
+
+  <header class="navbar" role="navigation" aria-label="شريط التنقل الرئيسي">
+    <div class="nav-left">
+      <a class="nav-brand" href="#">
+        <img src="en.png" alt="شعار THE EAST NETWORK" />
+        <div>
+          <div style="font-size:14px;opacity:0.9">THE EAST</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px">NETWORK</div>
+        </div>
+      </a>
+    </div>
+
+    <div class="nav-right">
+      <nav class="nav-links" aria-label="روابط سريعة">
+        <a class="nav-link" id="nav-security" role="button" tabindex="0"><i class="fas fa-shield-alt" style="margin-left:8px"></i>الأمان</a>
+        <a class="nav-link" id="nav-faq" role="button" tabindex="0"><i class="fas fa-question-circle" style="margin-left:8px"></i>الأسئلة</a>
+        <a class="nav-link" id="nav-support" role="button" tabindex="0"><i class="fas fa-headset" style="margin-left:8px"></i>الدعم</a>
+      </nav>
+
+      <div class="profile-pill" id="profile-login-pill" role="button" tabindex="0" title="تسجيل / حساب">
+        <i class="fas fa-user-circle" style="font-size:18px;color:var(--accent-1)"></i>
+        <span style="font-size:0.95rem;color:var(--muted)">سجل الدخول</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="container" role="main">
+    <section class="hero" aria-labelledby="hero-heading">
+      <div class="hero-col">
+        <h1 id="hero-heading" class="brand-title">بوابة الدخول الموحد — THE EAST NETWORK</h1>
+        <p class="brand-sub">
+          وصول آمن ومباشر لحسابات السيرفر والخدمات الحصرية. نسخّر بروتوكول OAuth2 للتحقق من الهوية وتقديم تجربة مخصصة للعضو — خصوصيتك وأمانك أولاً.
+        </p>
+
+        <div class="hero-ctas" role="group" aria-label="خيارات الوصول">
+          <a id="login-btn" class="btn btn-primary" role="button" tabindex="0" title="تسجيل الدخول عبر ديسكورد">
+            <i class="fab fa-discord"></i>
+            <span>تسجيل الدخول عبر Discord</span>
+            <div class="spinner" style="display:none;"></div>
+          </a>
+
+          <a id="read-policy" class="btn btn-outline" role="button" tabindex="0" title="عرض سياسة الخصوصية">
+            <i class="fas fa-file-shield" style="margin-left:8px"></i>
+            <span>اطّلع على سياسة الأمان</span>
+          </a>
+        </div>
+
+        <div class="helper">سيتم طلب أقل قدر ممكن من البيانات الضرورية: اسم المستخدم، الصورة الرمزية، ومعرّف الحساب — وفق سياسات ديسكورد.</div>
+      </div>
+
+      <div class="hero-visual" aria-hidden="false">
+        <div class="logo-frame" role="img" aria-label="شعار THE EAST NETWORK">
+          <div class="logo-glow" aria-hidden="true"></div>
+          <img src="en.png" alt="شعار THE EAST NETWORK">
+        </div>
+      </div>
+    </section>
+
+    <section id="features" class="features" aria-label="سياسة الأمان والخصوصية">
+      <div class="accordion" role="tablist">
+        <div class="acc-item">
+          <div class="acc-head" role="button" tabindex="0" aria-expanded="false" data-target="acc1">
+            <div>
+              <h4>🔷 لماذا الدخول عبر Discord؟</h4>
+              <p>التحقق من الهوية، إدارة الرتب، وتخصيص الوصول تلقائياً.</p>
+            </div>
+            <div class="acc-icon"><i class="fas fa-chevron-left"></i></div>
+          </div>
+          <div class="acc-body" id="acc1" role="region" aria-hidden="true">
+            <p>
+              يعتمد النظام على OAuth2 الرسمي. لا نقوم بطلب كلمات المرور أبداً — عملية التفويض تتم على خوادم ديسكورد. نجمع فقط البيانات الضرورية لربط حسابك بالسيرفر: اسم المستخدم، الصورة الرمزية، ومعرّف الحساب. تُستخدم هذه البيانات للتحقق من العضوية وتطبيق الصلاحيات تلقائياً.
+            </p>
+          </div>
+        </div>
+
+        <div class="acc-item">
+          <div class="acc-head" role="button" tabindex="0" aria-expanded="false" data-target="acc2">
+            <div>
+              <h4>🔷 سياسة الخصوصية</h4>
+              <p>نحترم خصوصيتك ونحمي بياناتك.</p>
+            </div>
+            <div class="acc-icon"><i class="fas fa-chevron-left"></i></div>
+          </div>
+          <div class="acc-body" id="acc2" role="region" aria-hidden="true">
+            <p>
+              لا نصل إلى رسائلك الخاصة أو معلومات حساسة. تُخزّن بيانات التعريف الأساسية مُشفّرة في قاعدة بيانات آمنة، وتُدار وفق سياسات الاستخدام المقبول. يمكن للمستخدم طلب حذف ربط حسابه في أي وقت عبر التواصل مع الدعم.
+            </p>
+          </div>
+        </div>
+
+        <div class="acc-item">
+          <div class="acc-head" role="button" tabindex="0" aria-expanded="false" data-target="acc3">
+            <div>
+              <h4>🔷 ماذا يحدث بعد التفويض؟</h4>
+              <p>توجّه مباشرة إلى لوحة التحكم.</p>
+            </div>
+            <div class="acc-icon"><i class="fas fa-chevron-left"></i></div>
+          </div>
+          <div class="acc-body" id="acc3" role="region" aria-hidden="true">
+            <p>
+              بعد التفويض، سترى لوحة تحكم شخصيّة تعرض رتبك، إمكانياتك المتاحة، وسجل التذاكر. يمكن للطاقم قبول طلبات الدعم وإدارة الصلاحيات من خلال النظام المتكامل.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="footer-left">
+      &copy; <strong>THE EAST NETWORK</strong> — جميع الحقوق محفوظة 2025
+      <span style="font-size:0.85rem; color:var(--accent-1); font-weight:700;">by kakashi </span>
+    </div>
+    <div class="footer-links" aria-hidden="false">
+      <a id="footer-security" role="button" tabindex="0">سياسة الأمان</a>
+      <a id="footer-support" role="button" tabindex="0">الدعم الفني</a>
+      <a id="contact-link-modal" role="button" tabindex="0">اتصل بنا</a>
+    </div>
+  </footer>
+
+  <div id="info-modal" class="modal-overlay" aria-hidden="true" role="dialog">
+    <div class="modal-content" role="document">
+      <div class="modal-header">
+        <h3 id="modal-title">عنوان الشرح</h3>
+        <button class="modal-close" aria-label="إغلاق" onclick="closeModal()"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <p id="modal-body-content">محتوى الشرح التفصيلي.</p>
+      </div>
+      <div class="modal-footer">
+        <button id="modal-copy" class="btn btn-outline" role="button" style="min-width:auto;padding:10px 18px;margin-top:0;">
+          <i class="fas fa-copy" style="margin-left:8px"></i>
+          <span>نسخ المحتوى</span>
+        </button>
+
+        <a id="modal-cta" href="#" target="_blank" class="btn btn-outline" style="min-width:auto;padding:10px 18px;margin-top:0; display:none;">
+          <i class="fas fa-external-link-alt" style="margin-left:8px"></i>
+          <span>الانتقال للمصدر</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // **تحسين رقم 9: منع النقر بزر الفأرة الأيمن (تعطيل قائمة السياق)**
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+    });
+
+    // بيانات الشرح التفصيلي لجميع العناصر التفاعلية
+    const DISCORD_OAUTH_URL = "https://discord.com/oauth2/authorize?client_id=1445455802180702361&response_type=code&redirect_uri=https%3A%2F%2Fthe-east-network.netlify.app%2Findex.html&scope=identify+guilds"; // الرابط الأساسي
+    
+    const modalData = {
+        'security': {
+            title: "تفاصيل سياسة الأمان والخصوصية",
+            content: "بوابتنا تعتمد على بروتوكول OAuth2 القياسي، مما يعني أن عملية التفويض تتم بالكامل على خوادم ديسكورد، ولا نطلب أو نصل لكلمات مرورك على الإطلاق. \n\nنجمع فقط بيانات التعريف الأساسية (اسم المستخدم، الصورة الرمزية، المعرّف) لربط حسابك بخدمات الشبكة وتطبيق صلاحياتك تلقائياً. هذه البيانات تُخزّن مُشفّرة بأمان.",
+            cta_text: "عرض الأقسام في الصفحة",
+            cta_link: "#features",
+            can_copy: true // تفعيل زر النسخ
+        },
+        'faq': {
+            title: "الأسئلة الأكثر شيوعاً حول الدخول",
+            content: "هذا القسم يهدف إلى الإجابة على استفساراتك حول عملية تسجيل الدخول وتفويض الحساب وماذا يحدث بعد ذلك. \n\nيمكنك مطالعة قسم 'سياسة الأمان والخصوصية' في الأسفل (الأكورديون) للحصول على إجابات مفصلة حول آليات عمل النظام وحماية بياناتك.",
+            cta_text: "عرض قسم الأسئلة",
+            cta_link: "#features",
+            can_copy: true
+        },
+        'support': {
+            title: "مركز الدعم الفني والمساعدة",
+            content: "نحن هنا لمساعدتك على مدار الساعة! إذا واجهت أي مشكلة أثناء عملية تسجيل الدخول، أو لديك استفسار حول حسابك، يمكنك التواصل معنا مباشرة. \n\nالدردشة الفورية هي أسرع وسيلة للحصول على دعم فني متخصص.",
+            cta_text: "بدء محادثة فورية",
+            cta_link: "https://tawk.to/chat/692e22aadd1e91197820e620/1jbe3eque",
+            can_copy: false
+        },
+        'login_pill': {
+            title: "زر تسجيل الدخول",
+            content: "هذا الزر هو اختصار لبدء عملية تسجيل الدخول الموحد عبر Discord. عند النقر عليه، سيتم توجيهك إلى صفحة تفويض رسمية من Discord لربط حسابك بشبكة THE EAST NETWORK.",
+            cta_text: "انتقل لتسجيل الدخول",
+            cta_link: DISCORD_OAUTH_URL, 
+            can_copy: false
+        }
+    };
+
+    const modal = document.getElementById('info-modal');
+    const modalTitle = document.getElementById('modal-title');
+    const modalBodyContent = document.getElementById('modal-body-content');
+    const modalCta = document.getElementById('modal-cta');
+    const modalCopy = document.getElementById('modal-copy'); // **عنصر زر النسخ**
+    const loginBtn = document.getElementById('login-btn');
+    
+    // **دالة النسخ (تحسين رقم 12)**
+    function copyContent() {
+        const textToCopy = modalBodyContent.textContent.trim();
+        navigator.clipboard.writeText(textToCopy).then(() => {
+            // تحديث حالة الزر للإشارة إلى النجاح
+            const originalText = modalCopy.querySelector('span').textContent;
+            modalCopy.querySelector('span').textContent = 'تم النسخ بنجاح!';
+            modalCopy.classList.add('copied');
+            setTimeout(() => {
+                modalCopy.querySelector('span').textContent = originalText;
+                modalCopy.classList.remove('copied');
+            }, 1500);
+        }).catch(err => {
+            console.error('فشل في نسخ المحتوى: ', err);
+            alert('تعذر نسخ المحتوى. يرجى المحاولة يدوياً.');
+        });
+    }
+    modalCopy.addEventListener('click', copyContent);
+
+
+    function openModal(key) {
+        const data = modalData[key];
+        if (!data) return;
+
+        modalTitle.textContent = data.title;
+        modalBodyContent.textContent = data.content;
+        
+        // إعداد زر الـ CTA
+        if (data.cta_link) {
+            modalCta.style.display = 'inline-flex';
+            modalCta.href = data.cta_link;
+            modalCta.querySelector('span').textContent = data.cta_text;
+            modalCta.target = data.cta_link.startsWith('#') ? '_self' : '_blank';
+        } else {
+            modalCta.style.display = 'none';
+        }
+
+        // إعداد زر النسخ
+        if (data.can_copy) {
+            modalCopy.style.display = 'inline-flex';
+            modalCopy.querySelector('span').textContent = 'نسخ المحتوى';
+        } else {
+            modalCopy.style.display = 'none';
+        }
+
+        modal.classList.add('open');
+        modal.setAttribute('aria-hidden', 'false');
+    }
+
+    function closeModal() {
+        modal.classList.remove('open');
+        modal.setAttribute('aria-hidden', 'true');
+        setTimeout(() => {
+            modalCta.href = '#';
+            modalCta.style.display = 'none';
+            modalCopy.style.display = 'none';
+        }, 300);
+    }
+    
+    // إغلاق المودال عند الضغط على مفتاح ESC
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('open')) {
+            closeModal();
+        }
+    });
+
+    // إغلاق المودال عند الضغط خارج المحتوى
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+    
+    // **تحسين رقم 5 و 10: منطق زر تسجيل الدخول (Loading State & Validation)**
+    function handleLoginAttempt(e) {
+        // منع السلوك الافتراضي للانتقال المباشر
+        e.preventDefault(); 
+        
+        let targetUrl = loginBtn.dataset.href || DISCORD_OAUTH_URL;
+
+        // **تحسين رقم 10: التحقق من الرابط**
+        if (targetUrl.includes('YOUR_DISCORD_OAUTH2_URL_HERE')) {
+            alert('عفواً، رابط التفويض الخاص بخدمة Discord غير مُعدّ بشكل صحيح. يرجى التواصل مع المسؤول.');
+            return; 
+        }
+
+        // **تحسين رقم 5: تفعيل حالة التحميل**
+        loginBtn.classList.add('is-loading');
+        loginBtn.querySelector('span').textContent = 'جاري التحقق...';
+        loginBtn.querySelector('.spinner').style.display = 'block';
+
+        // محاكاة تأخير بسيط قبل التوجيه لضمان رؤية حالة التحميل
+        setTimeout(() => {
+            window.location.href = targetUrl;
+        }, 1000); 
+    }
+    
+    loginBtn.addEventListener('click', handleLoginAttempt);
+    loginBtn.addEventListener('keydown', function(e){
+      if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleLoginAttempt(e); }
+    });
+    // تخزين الرابط الفعلي ليتولاه الـ JS
+    loginBtn.dataset.href = DISCORD_OAUTH_URL;
+
+
+    // ربط باقي العناصر التفاعلية بدالة openModal
+    document.getElementById('nav-security').addEventListener('click', () => openModal('security'));
+    document.getElementById('nav-security').addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal('security'); } });
+
+    document.getElementById('nav-faq').addEventListener('click', () => openModal('faq'));
+    document.getElementById('nav-faq').addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal('faq'); } });
+    
+    document.getElementById('nav-support').addEventListener('click', () => openModal('support'));
+    document.getElementById('nav-support').addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal('support'); } });
+
+    document.getElementById('profile-login-pill').addEventListener('click', () => openModal('login_pill'));
+    document.getElementById('profile-login-pill').addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal('login_pill'); } });
+
+    document.getElementById('read-policy').addEventListener('click', () => openModal('security'));
+    document.getElementById('read-policy').addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal('security'); } });
+    
+    document.getElementById('footer-security').addEventListener('click', () => openModal('security'));
+    document.getElementById('footer-security').addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal('security'); } });
+    
+    document.getElementById('footer-support').addEventListener('click', () => openModal('support'));
+    document.getElementById('footer-support').addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal('support'); } });
+
+    document.getElementById('contact-link-modal').addEventListener('click', () => openModal('support'));
+    document.getElementById('contact-link-modal').addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal('support'); } });
+
+    // ********** منطق الأكورديون (تم تحسين سلاسة التمرير) **********
+    (function(){
+      const accHeads = document.querySelectorAll('.acc-head');
+
+      accHeads.forEach(head => {
+        const targetId = head.dataset.target;
+        const body = document.getElementById(targetId);
+        const icon = head.querySelector('.acc-icon i');
+
+        function openIt(){
+          const expanded = head.getAttribute('aria-expanded') === 'true';
+          if(expanded){
+            head.setAttribute('aria-expanded','false');
+            body.classList.remove('open');
+            body.setAttribute('aria-hidden','true');
+            icon.style.transform = 'rotate(0deg)';
+          } else {
+            // إغلاق باقي العناصر
+            document.querySelectorAll('.acc-body.open').forEach(b=>{
+              b.classList.remove('open');
+              b.setAttribute('aria-hidden','true');
+              const h = document.querySelector('[data-target="'+b.id+'"]');
+              if(h) h.setAttribute('aria-expanded','false');
+              const ic = h ? h.querySelector('.acc-icon i') : null;
+              if(ic) ic.style.transform = 'rotate(0deg)';
+            });
+
+            head.setAttribute('aria-expanded','true');
+            body.classList.add('open');
+            body.setAttribute('aria-hidden','false');
+            // تم نقل حركة الأيقونة إلى CSS لتطبيق اللون (تحسين رقم 7)
+            
+            // **تحسين رقم 11: تم تحسين التمرير ليكون أكثر سلاسة**
+            setTimeout(()=> {
+              head.scrollIntoView({behavior:'smooth', block:'start'});
+            }, 150);
+          }
+        }
+
+        head.addEventListener('click', openIt);
+        head.addEventListener('keydown', function(e){
+          if(e.key === 'Enter' || e.key === ' '){
+            e.preventDefault(); openIt();
+          }
+        });
+      });
+
+      // منطق المودال CTA - لضمان الانتقال (Scroll) بعد إغلاق المودال
+      modalCta.addEventListener('click', function(e){
+        if(modalCta.target === '_self' && modalCta.href.includes('#features')){
+            e.preventDefault();
+            closeModal();
+            setTimeout(() => {
+                document.querySelector('#features').scrollIntoView({behavior:'smooth', block:'start'});
+            }, 300);
+        }
+      });
+      
+      // Accessibility: small focus styles for keyboard users
+      document.addEventListener('keydown', function(e){
+        if(e.key === 'Tab') document.body.classList.add('user-is-tabbing');
+      });
+
+      // replace oauth placeholder with real link dynamically if available in sessionStorage (optional)
+      const oauth = sessionStorage.getItem('discord_oauth_url');
+      if(oauth){
+        loginBtn.dataset.href = oauth;
+        modalData['login_pill'].cta_link = oauth; 
+      }
+    })();
+  </script>
+</body>
+</html>

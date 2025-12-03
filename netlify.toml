@@ -1,0 +1,43 @@
+# -------------------------------
+# Netlify configuration file
+# -------------------------------
+
+[build]
+  # مجلد النشر (حيث يوجد index.html و login.html)
+  publish = "public"
+  # مجلد الدوال
+  functions = "netlify/functions"
+
+# -------------------------------
+# Redirects
+# -------------------------------
+[[redirects]]
+  # تحويل الصفحة الرئيسية مباشرة إلى login.html
+  from = "/"
+  to = "/login.html"
+  status = 302
+  force = true
+
+[[redirects]]
+  # تحويل أي طلب غير موجود إلى login.html (حماية 404)
+  from = "/*"
+  to = "/login.html"
+  status = 302
+  force = false
+
+[[redirects]]
+  # توجيه OAuth callback إلى الدالة
+  from = "/.netlify/functions/discord-callback"
+  to = "/.netlify/functions/discord-callback"
+  status = 200
+  force = true
+
+# -------------------------------
+# Headers (اختياري لتقوية الأمان)
+# -------------------------------
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "no-referrer-when-downgrade"
