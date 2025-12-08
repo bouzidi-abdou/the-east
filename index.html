@@ -73,8 +73,26 @@
                 </ul>
             </nav>
             <div class="auth-buttons">
-                <a href="https://discord.gg/3Sbx3xb68T" class="btn btn-primary"><i class="fas fa-sign-in-alt"></i> تسجيل الدخول</a>
+    <div id="auth-status-container" style="display: flex; align-items: center;">
+        
+        <div class="profile-pill-custom dropdown-container" id="profile-pill-in" role="button" tabindex="0" title="الملف الشخصي" 
+             style="display: none; cursor: pointer; padding: 6px 10px; border-radius: 20px; background: rgba(255, 255, 255, 0.1); position: relative; gap: 8px; align-items: center;">
+            
+            <img id="profile-avatar" src="en.png" alt="صورة المستخدم" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;">
+            <span id="profile-username" style="font-size:0.9rem; color: #fff; font-weight: 700;">اسم المستخدم</span>
+            <i class="fas fa-chevron-down" id="profile-arrow" style="font-size: 10px; color: #ccc; transition: transform 0.2s ease;"></i>
+            
+            <div id="profile-dropdown" style="position: absolute; top: 100%; right: 0; min-width: 180px; padding: 8px 0; margin-top: 10px; background: #2f3136; border: 1px solid #40444b; border-radius: 8px; box-shadow: 0 8px 20px rgba(0,0,0,0.6); display: none; z-index: 100;">
+                <a id="logout-btn" href="/.netlify/functions/logout" style="display: flex; gap: 10px; align-items: center; padding: 10px 16px; text-decoration: none; color: #e74c3c; font-weight: 700; transition: background 0.2s ease;">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>تسجيل الخروج</span>
+                </a>
             </div>
+        </div>
+        
+        <a href="/login.html" id="login-pill-out" class="btn btn-primary"><i class="fas fa-sign-in-alt"></i> تسجيل الدخول</a>
+    </div>
+</div>
         </div>
     </header>
 
@@ -613,6 +631,81 @@ document.addEventListener('keydown', function(e) {
         e.preventDefault();
     }
 });
+// *************************************************************
+// 🆕 منطق إدارة الجلسة وعرض الملف الشخصي
+// *************************************************************
+document.addEventListener('DOMContentLoaded', () => {
+
+    // 1. دالة بسيطة لقراءة قيمة الكوكي (تستخدم لجميع البيانات غير HttpOnly)
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+        return null;
+    }
+
+    // 2. دالة بناء رابط صورة الديسكورد
+    function getDiscordAvatarURL(id, hash) {
+        if (!id || !hash || hash === 'null') {
+            // تعيين الصورة الافتراضية
+            const defaultAvatarNumber = (BigInt(id) >> 22n) % 6n;
+            return `https://cdn.discordapp.com/embed/avatars/${defaultAvatarNumber}.png`;
+        }
+        // يمكن أن تكون صور الديسكورد بصيغة gif أو png
+        const extension = hash.startsWith('a_') ? 'gif' : 'png';
+        return `https://cdn.discordapp.com/avatars/${id}/${hash}.${extension}?size=64`;
+    }
+    
+    // 3. جلب بيانات الكوكيز التي تم تعيينها في auth-callback.js
+    const userId = getCookie('discord_user_id');
+    const username = getCookie('discord_username');
+    const avatarHash = getCookie('discord_avatar_hash');
+
+    // 4. العناصر الأساسية
+    const pillIn = document.getElementById('profile-pill-in'); 
+    const pillOut = document.getElementById('login-pill-out'); 
+    const usernameSpan = document.getElementById('profile-username');
+    const avatarImg = document.getElementById('profile-avatar');
+    const dropdown = document.getElementById('profile-dropdown');
+
+    // 5. تهيئة الجلسة
+    if (userId && username) {
+        // حالة: تسجيل الدخول (Logged In)
+        
+        // أ. إخفاء زر تسجيل الدخول وإظهار الملف الشخصي
+        if (pillOut) pillOut.style.display = 'none'; 
+        if (pillIn) pillIn.style.display = 'flex'; 
+
+        // ب. تحديث البيانات
+        usernameSpan.textContent = decodeURIComponent(username);
+        avatarImg.src = getDiscordAvatarURL(userId, avatarHash);
+        avatarImg.alt = decodeURIComponent(username);
+
+        // ج. منطق القائمة المنسدلة (Dropdown)
+        if (pillIn) {
+            pillIn.addEventListener('click', (e) => {
+                e.stopPropagation(); 
+                const isDropdownOpen = dropdown.style.display === 'flex'; 
+                dropdown.style.display = isDropdownOpen ? 'none' : 'flex'; // تبديل العرض بين إظهار/إخفاء
+                document.getElementById('profile-arrow').style.transform = isDropdownOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+            });
+
+            // إغلاق القائمة عند النقر خارجها
+            document.addEventListener('click', (e) => {
+                if (dropdown && dropdown.style.display === 'flex' && !pillIn.contains(e.target)) {
+                    dropdown.style.display = 'none';
+                    document.getElementById('profile-arrow').style.transform = 'rotate(0deg)';
+                }
+            });
+        }
+        
+    } else {
+        // حالة: تسجيل الخروج (Logged Out)
+        if (pillIn) pillIn.style.display = 'none'; 
+        if (pillOut) pillOut.style.display = 'flex'; // التأكد من إظهار زر الدخول
+    }
+});
+// *************************************************************
 </script>
 
     <script src="script.js"></script>
@@ -632,5 +725,6 @@ document.addEventListener('keydown', function(e) {
             </div>
     </div>
 </div>
+
 </body>
 </html>
